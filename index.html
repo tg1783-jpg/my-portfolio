@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>後藤哲也 | Web Designer Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Noto Sans JP -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans JP', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            main: '#2C3E50', // ダークブルー
+                            accent: '#E74C3C', // レッド
+                            bg: '#ECF0F1', // ライトグレー
+                            darkBg: '#1a202c', // ダークモード背景
+                            darkCard: '#2d3748', // ダークモードカード
+                        }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Styles for smooth transitions and initial states */
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Mobile menu transition */
+        #mobile-menu {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        #mobile-menu.open {
+            max-height: 300px;
+            opacity: 1;
+        }
+        
+        /* Focus styles for accessibility */
+        *:focus-visible {
+            outline: 2px solid #E74C3C;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body class="bg-brand-bg text-gray-800 dark:bg-brand-darkBg dark:text-gray-200 font-sans antialiased selection:bg-brand-accent selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="#" class="text-2xl font-bold tracking-tighter text-brand-main dark:text-white hover:text-brand-accent dark:hover:text-brand-accent transition-colors">
+                        Tetsuya Goto
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-600 hover:text-brand-accent dark:text-gray-300 dark:hover:text-brand-accent transition-colors font-medium">Home</a>
+                    <a href="#about" class="text-gray-600 hover:text-brand-accent dark:text-gray-300 dark:hover:text-brand-accent transition-colors font-medium">About</a>
+                    <a href="#skills" class="text-gray-600 hover:text-brand-accent dark:text-gray-300 dark:hover:text-brand-accent transition-colors font-medium">Skills</a>
+                    <a href="#portfolio" class="text-gray-600 hover:text-brand-accent dark:text-gray-300 dark:hover:text-brand-accent transition-colors font-medium">Portfolio</a>
+                    <a href="#contact" class="px-5 py-2 rounded-full bg-brand-main text-white hover:bg-opacity-90 dark:bg-white dark:text-brand-main dark:hover:bg-gray-200 transition-colors font-medium shadow-md">Contact</a>
+                    
+                    <!-- Theme Toggle Button -->
+                    <button id="theme-toggle" class="p-2 rounded-full text-gray-500 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors focus:outline-none" aria-label="Toggle Dark Mode">
+                        <i id="theme-toggle-dark-icon" class="hidden fas fa-moon text-xl"></i>
+                        <i id="theme-toggle-light-icon" class="hidden fas fa-sun text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center space-x-4">
+                     <!-- Theme Toggle Button (Mobile) -->
+                     <button id="theme-toggle-mobile" class="p-2 rounded-full text-gray-500 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors focus:outline-none" aria-label="Toggle Dark Mode">
+                        <i id="theme-toggle-dark-icon-mobile" class="hidden fas fa-moon text-xl"></i>
+                        <i id="theme-toggle-light-icon-mobile" class="hidden fas fa-sun text-xl"></i>
+                    </button>
+                    <button id="mobile-menu-button" class="text-gray-600 dark:text-gray-300 hover:text-brand-accent focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="md:hidden bg-white dark:bg-brand-darkCard shadow-lg absolute w-full left-0">
+            <div class="px-2 pt-2 pb-4 space-y-1 sm:px-3">
+                <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-accent hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors">Home</a>
+                <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-accent hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors">About</a>
+                <a href="#skills" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-accent hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors">Skills</a>
+                <a href="#portfolio" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-accent hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors">Portfolio</a>
+                <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-brand-accent font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 1. Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <!-- Abstract Background Elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+            <div class="absolute top-[20%] left-[10%] w-72 h-72 bg-brand-main opacity-5 dark:opacity-20 rounded-full mix-blend-multiply filter blur-3xl animate-float"></div>
+            <div class="absolute top-[40%] right-[10%] w-96 h-96 bg-brand-accent opacity-5 dark:opacity-20 rounded-full mix-blend-multiply filter blur-3xl animate-float" style="animation-delay: 1.5s;"></div>
+            <div class="absolute -bottom-8 left-[40%] w-80 h-80 bg-blue-300 opacity-10 dark:opacity-10 rounded-full mix-blend-multiply filter blur-3xl animate-float" style="animation-delay: 3s;"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+            <div class="text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-12">
+                
+                <!-- Text Content -->
+                <div class="md:w-1/2 opacity-0 animate-fade-in-up">
+                    <span class="inline-block py-1 px-3 rounded-full bg-red-100 text-brand-accent dark:bg-red-900/30 dark:text-red-400 text-sm font-semibold tracking-wider mb-4 border border-red-200 dark:border-red-800/50">
+                        WEB DESIGNER & COLOR SPECIALIST
+                    </span>
+                    <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold text-brand-main dark:text-white leading-tight mb-6 tracking-tight">
+                        Colors Logic,<br>
+                        <span class="text-brand-accent relative inline-block">
+                            Design Magic.
+                            <svg class="absolute w-full h-3 -bottom-1 left-0 text-brand-accent/30" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 15 100 5" stroke="currentColor" stroke-width="4" fill="transparent"/></svg>
+                        </span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed max-w-2xl mx-auto md:mx-0">
+                        色彩検定1級の知識と確かなコーディング技術で、<br class="hidden md:block">企業の想いを「伝わる」形に。
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                        <a href="#contact" class="px-8 py-4 rounded-full bg-brand-accent text-white font-bold hover:bg-red-600 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 text-center">
+                            ご相談はこちら
+                        </a>
+                        <a href="#portfolio" class="px-8 py-4 rounded-full border-2 border-brand-main text-brand-main dark:border-white dark:text-white font-bold hover:bg-brand-main hover:text-white dark:hover:bg-white dark:hover:text-brand-main transition-all text-center">
+                            実績を見る
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hero Image (Illustrative) -->
+                <div class="md:w-1/2 w-full max-w-md opacity-0 animate-fade-in-up" style="animation-delay: 0.3s;">
+                    <div class="relative w-full aspect-square">
+                        <!-- Decorative background shapes -->
+                        <div class="absolute inset-0 bg-gradient-to-tr from-brand-main/20 to-brand-accent/20 rounded-[2rem] transform rotate-6 scale-105 transition-transform hover:rotate-12 duration-500"></div>
+                        <!-- Main Image Placeholder using placehold.co for illustration -->
+                        <img src="https://placehold.co/600x600/2C3E50/FFFFFF?text=Creative\nWorkspace" alt="Creative Workspace" class="absolute inset-0 w-full h-full object-cover rounded-[2rem] shadow-2xl z-10 border-4 border-white dark:border-gray-800">
+                        
+                        <!-- Floating Badges -->
+                        <div class="absolute -top-6 -right-6 bg-white dark:bg-brand-darkCard p-4 rounded-2xl shadow-xl z-20 animate-float" style="animation-delay: 1s;">
+                            <i class="fas fa-palette text-3xl text-brand-accent"></i>
+                        </div>
+                        <div class="absolute -bottom-6 -left-6 bg-white dark:bg-brand-darkCard p-4 rounded-2xl shadow-xl z-20 animate-float" style="animation-delay: 2s;">
+                            <i class="fas fa-code text-3xl text-brand-main dark:text-blue-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll Down Indicator -->
+        <a href="#about" class="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-gray-400 hover:text-brand-accent transition-colors animate-bounce">
+            <i class="fas fa-chevron-down text-2xl"></i>
+        </a>
+    </section>
+
+    <!-- 2. About Section -->
+    <section id="about" class="py-24 bg-white dark:bg-brand-darkCard transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-main dark:text-white mb-4 relative inline-block">
+                    Who I Am
+                    <span class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-brand-accent rounded-full"></span>
+                </h2>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <!-- Profile Image -->
+                <div class="md:w-1/3 flex justify-center reveal">
+                    <div class="relative">
+                        <div class="w-64 h-64 rounded-full overflow-hidden border-4 border-brand-bg dark:border-gray-700 shadow-xl relative z-10 bg-gray-100">
+                            <!-- Male Avatar Placeholder -->
+                            <img src="https://placehold.co/400x400/ECF0F1/2C3E50?text=Avatar" alt="後藤哲也のプロフィール画像" class="w-full h-full object-cover">
+                        </div>
+                        <!-- Background decoration -->
+                        <div class="absolute -inset-4 rounded-full border-2 border-brand-accent border-dashed animate-[spin_20s_linear_infinite] opacity-50"></div>
+                    </div>
+                </div>
+
+                <!-- Bio Content -->
+                <div class="md:w-2/3 reveal">
+                    <h3 class="text-2xl font-bold text-brand-main dark:text-white mb-6">初めまして、デザイナーの後藤哲也です。</h3>
+                    
+                    <div class="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed mb-8">
+                        <p>
+                            近郊の制作会社で約30年、企業のコーポレートサイトや作品のプロデュースに従事してまいりました。現在はその経験を活かし、フリーランスのWebデザイナーとして活動しています。
+                        </p>
+                        
+                        <div class="bg-brand-bg dark:bg-gray-800 p-6 rounded-xl border-l-4 border-brand-accent my-6 shadow-sm">
+                            <h4 class="font-bold text-brand-main dark:text-white flex items-center mb-2">
+                                <i class="fas fa-star text-brand-accent mr-2"></i>私の強み
+                            </h4>
+                            <p>
+                                ただ綺麗なデザインを作るだけでなく、<strong>色彩心理学に基づいた配色設計</strong>を得意としています。<br>
+                                「信頼感を与える青」「購買意欲をそそる赤」など、ターゲットの心理に働きかけ、目的に合わせた色使いでビジネスの課題解決をサポートします。
+                            </p>
+                        </div>
+
+                        <p class="flex items-center">
+                            <i class="fas fa-coffee text-brand-main dark:text-gray-400 mr-3 text-xl w-6 text-center"></i>
+                            <span><strong class="text-gray-800 dark:text-gray-200">趣味：</strong>街中の看板の配色分析、カフェ巡り</span>
+                        </p>
+                        <p class="flex items-center">
+                            <i class="fas fa-certificate text-brand-accent mr-3 text-xl w-6 text-center"></i>
+                            <span><strong class="text-gray-800 dark:text-gray-200">資格：</strong>色彩検定1級</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Skills Section -->
+    <section id="skills" class="py-24 bg-brand-bg dark:bg-brand-darkBg transition-colors duration-300 relative">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]" style="background-image: radial-gradient(#2C3E50 1px, transparent 1px); background-size: 20px 20px;"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-main dark:text-white mb-4 relative inline-block">
+                    My Skills
+                    <span class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-brand-accent rounded-full"></span>
+                </h2>
+                <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">デザインから実装まで、一貫して対応可能です。論理的なデザインと高品質なコーディングを提供します。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Skill Category 1: Design -->
+                <div class="bg-white dark:bg-brand-darkCard rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow border border-gray-100 dark:border-gray-700 reveal">
+                    <div class="w-14 h-14 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-6">
+                        <i class="fas fa-pen-nib text-2xl text-brand-accent"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-main dark:text-white mb-4">Design</h3>
+                    <ul class="space-y-3 text-gray-600 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span><strong>Figma / Adobe XD</strong><br><span class="text-sm">ワイヤーフレーム・プロトタイプ作成</span></span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span><strong>Photoshop / Illustrator</strong><br><span class="text-sm">画像編集・ロゴ・アイコン作成</span></span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span><strong>色彩設計</strong><br><span class="text-sm">色彩検定1級理論に基づく配色</span></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Skill Category 2: Development -->
+                <div class="bg-white dark:bg-brand-darkCard rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow border border-gray-100 dark:border-gray-700 reveal" style="transition-delay: 0.1s;">
+                    <div class="w-14 h-14 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-6">
+                        <i class="fas fa-code text-2xl text-blue-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-main dark:text-white mb-4">Development</h3>
+                    <ul class="space-y-3 text-gray-600 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span><strong>HTML5 / CSS3</strong><br><span class="text-sm">セマンティックなマークアップ</span></span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span><strong>JavaScript</strong><br><span class="text-sm">動的なUI/UXの実装</span></span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span><strong>Tailwind CSS</strong><br><span class="text-sm">効率的なスタイリングと保守性</span></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Skill Category 3: Direction -->
+                <div class="bg-white dark:bg-brand-darkCard rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow border border-gray-100 dark:border-gray-700 reveal" style="transition-delay: 0.2s;">
+                    <div class="w-14 h-14 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-6">
+                        <i class="fas fa-sitemap text-2xl text-green-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-main dark:text-white mb-4">Direction</h3>
+                    <ul class="space-y-3 text-gray-600 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span><strong>Webディレクション</strong><br><span class="text-sm">30年の経験に基づく進行管理</span></span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span><strong>UI/UX設計</strong><br><span class="text-sm">ユーザー導線を意識した設計</span></span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span><strong>レスポンシブ対応</strong><br><span class="text-sm">全デバイスでの最適表示</span></span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Portfolio Section -->
+    <section id="portfolio" class="py-24 bg-white dark:bg-brand-darkCard transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-main dark:text-white mb-4 relative inline-block">
+                    Portfolio
+                    <span class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-brand-accent rounded-full"></span>
+                </h2>
+                <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">色彩心理学と目的に合わせたデザイン設計の事例の一部をご紹介します。</p>
+            </div>
+
+            <!-- Grid Gallery -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Project 1 -->
+                <div class="group relative rounded-2xl overflow-hidden shadow-lg reveal">
+                    <div class="aspect-w-16 aspect-h-12 bg-gray-200">
+                        <!-- Placeholder Image -->
+                        <img src="https://placehold.co/600x450/2C3E50/FFFFFF?text=Corporate+Site" alt="コーポレートサイト実績" class="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <!-- Overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-main/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <h3 class="text-white text-xl font-bold mb-2">IT企業 コーポレートサイト</h3>
+                        <p class="text-gray-200 text-sm mb-4">信頼感（青）と先進性をテーマにしたリニューアル。</p>
+                        <span class="inline-block px-3 py-1 bg-white/20 text-white text-xs rounded-full backdrop-blur-sm w-max">Web Design / Coding</span>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="group relative rounded-2xl overflow-hidden shadow-lg reveal" style="transition-delay: 0.1s;">
+                    <div class="aspect-w-16 aspect-h-12 bg-gray-200">
+                         <img src="https://placehold.co/600x450/E74C3C/FFFFFF?text=LP+Design" alt="LP制作実績" class="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-main/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <h3 class="text-white text-xl font-bold mb-2">新商品キャンペーンLP</h3>
+                        <p class="text-gray-200 text-sm mb-4">購買意欲を刺激する赤をアクセントに高いCVRを実現。</p>
+                        <span class="inline-block px-3 py-1 bg-white/20 text-white text-xs rounded-full backdrop-blur-sm w-max">Figma / Direction</span>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="group relative rounded-2xl overflow-hidden shadow-lg reveal" style="transition-delay: 0.2s;">
+                    <div class="aspect-w-16 aspect-h-12 bg-gray-200">
+                         <img src="https://placehold.co/600x450/27ae60/FFFFFF?text=Cafe+Website" alt="カフェサイト実績" class="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-main/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <h3 class="text-white text-xl font-bold mb-2">オーガニックカフェ Webサイト</h3>
+                        <p class="text-gray-200 text-sm mb-4">自然由来の緑とアースカラーで温かみのある空間を表現。</p>
+                        <span class="inline-block px-3 py-1 bg-white/20 text-white text-xs rounded-full backdrop-blur-sm w-max">Design / WordPress</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12 reveal">
+                 <button class="px-8 py-3 rounded-full border-2 border-brand-main text-brand-main dark:border-gray-400 dark:text-gray-300 font-bold hover:bg-brand-main hover:text-white dark:hover:bg-gray-700 transition-colors">
+                    さらに実績を見る
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Contact Section -->
+    <section id="contact" class="py-24 bg-brand-main relative overflow-hidden">
+        <!-- Abstract Decoration -->
+        <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-brand-accent opacity-20 rounded-full blur-3xl"></div>
+        <div class="absolute -left-20 top-20 w-64 h-64 bg-blue-500 opacity-10 rounded-full blur-3xl"></div>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-12 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Let's Work Together</h2>
+                <p class="text-gray-300 text-lg">
+                    制作のご依頼、お見積り、その他ご相談はお気軽にどうぞ。<br>
+                    2営業日以内に返信いたします。
+                </p>
+            </div>
+
+            <div class="bg-white dark:bg-brand-darkCard rounded-2xl shadow-2xl p-8 md:p-12 reveal">
+                <!-- Message Box Container (Instead of alert) -->
+                <div id="form-message" class="hidden mb-6 p-4 rounded-lg text-center font-bold"></div>
+
+                <form id="contact-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">お名前 <span class="text-red-500">*</span></label>
+                            <input type="text" id="name" name="name" required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-colors">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">メールアドレス <span class="text-red-500">*</span></label>
+                            <input type="email" id="email" name="email" required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-colors">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">お問い合わせ内容 <span class="text-red-500">*</span></label>
+                        <textarea id="message" name="message" rows="5" required
+                            class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-colors resize-none"></textarea>
+                    </div>
+                    <div class="text-center pt-4">
+                        <button type="submit"
+                            class="inline-flex items-center justify-center px-10 py-4 border border-transparent text-base font-bold rounded-full text-white bg-brand-accent hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-accent transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 w-full sm:w-auto">
+                            <i class="fas fa-paper-plane mr-2"></i> メッセージを送信する
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-6 md:mb-0 text-center md:text-left">
+                <span class="text-2xl font-bold text-white tracking-tighter block mb-2">Tetsuya Goto</span>
+                <p class="text-sm">Web Designer / Color Specialist</p>
+            </div>
+            
+            <!-- SNS Links -->
+            <div class="flex space-x-6">
+                <a href="#" class="text-gray-400 hover:text-white transition-colors" aria-label="X (Twitter)" title="日々のデザイン発信">
+                    <i class="fab fa-x-twitter text-2xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors" aria-label="Instagram" title="日々のデザイン発信">
+                    <i class="fab fa-instagram text-2xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors" aria-label="GitHub">
+                    <i class="fab fa-github text-2xl"></i>
+                </a>
+            </div>
+        </div>
+        <div class="text-center mt-8 text-sm text-gray-500">
+            &copy; 2026 Tetsuya Goto. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            /* 1. Dark Mode Toggle Logic */
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const themeToggleMobileBtn = document.getElementById('theme-toggle-mobile');
+            const darkIcon = document.getElementById('theme-toggle-dark-icon');
+            const lightIcon = document.getElementById('theme-toggle-light-icon');
+            const darkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
+            const lightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
+
+            // Change the icons inside the button based on previous settings
+            if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                lightIcon.classList.remove('hidden');
+                lightIconMobile.classList.remove('hidden');
+            } else {
+                darkIcon.classList.remove('hidden');
+                darkIconMobile.classList.remove('hidden');
+            }
+
+            function toggleTheme() {
+                // toggle icons
+                darkIcon.classList.toggle('hidden');
+                lightIcon.classList.toggle('hidden');
+                darkIconMobile.classList.toggle('hidden');
+                lightIconMobile.classList.toggle('hidden');
+
+                // if set via local storage previously
+                if (localStorage.getItem('color-theme')) {
+                    if (localStorage.getItem('color-theme') === 'light') {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    }
+
+                // if NOT set via local storage previously
+                } else {
+                    if (document.documentElement.classList.contains('dark')) {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    } else {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    }
+                }
+            }
+
+            themeToggleBtn.addEventListener('click', toggleTheme);
+            themeToggleMobileBtn.addEventListener('click', toggleTheme);
+
+
+            /* 2. Mobile Menu Toggle Logic */
+            const mobileMenuBtn = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileLinks = mobileMenu.querySelectorAll('a');
+
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('open');
+                // Change icon
+                const icon = mobileMenuBtn.querySelector('i');
+                if(mobileMenu.classList.contains('open')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+
+            // Close mobile menu on link click
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('open');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                });
+            });
+
+
+            /* 3. Navbar Scroll Effect */
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-white/90', 'dark:bg-brand-darkCard/90', 'backdrop-blur-md', 'shadow-sm');
+                } else {
+                    navbar.classList.remove('bg-white/90', 'dark:bg-brand-darkCard/90', 'backdrop-blur-md', 'shadow-sm');
+                }
+            });
+
+
+            /* 4. Scroll Reveal Animation */
+            const reveals = document.querySelectorAll('.reveal');
+            
+            function reveal() {
+                const windowHeight = window.innerHeight;
+                const elementVisible = 100;
+
+                reveals.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    if (elementTop < windowHeight - elementVisible) {
+                        element.classList.add('active');
+                    }
+                });
+            }
+            
+            // Initial check and scroll listener
+            reveal();
+            window.addEventListener('scroll', reveal);
+
+
+            /* 5. Form Submission Handling (Mock) */
+            const form = document.getElementById('contact-form');
+            const formMessage = document.getElementById('form-message');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Get button and change state
+                const btn = form.querySelector('button[type="submit"]');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> 送信中...';
+                btn.disabled = true;
+
+                // Mock API call delay
+                setTimeout(() => {
+                    // Show success message
+                    formMessage.textContent = 'お問い合わせありがとうございます。メッセージを受け付けました。2営業日以内にご返信いたします。';
+                    formMessage.classList.remove('hidden', 'bg-red-100', 'text-red-700');
+                    formMessage.classList.add('bg-green-100', 'text-green-700', 'border', 'border-green-400');
+                    
+                    // Reset form
+                    form.reset();
+                    
+                    // Restore button
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+
+                    // Hide message after 5 seconds
+                    setTimeout(() => {
+                        formMessage.classList.add('hidden');
+                    }, 5000);
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>
